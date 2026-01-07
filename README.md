@@ -40,15 +40,12 @@ docker run --rm -v $(pwd)/results:/app/results credit-agents ./run_full.sh
 ├── data/                   # Dataset fetchers and preprocessors
 ├── figures/                # Publication-ready images (generated)
 ├── results/                # Experimental outputs
-├── paper_ml/               # ML conference paper (LaTeX + PDF)
-├── paper_industry/         # Industry/regulatory paper (LaTeX + PDF)
 ├── ethics/                 # Compliance documentation
 ├── CI/                     # GitHub Actions workflows
 ├── Dockerfile              # Reproducible environment
 ├── requirements.txt        # Python dependencies (locked versions)
 ├── run_quick.sh            # Quick test script
 ├── run_full.sh             # Full experiment script
-└── reproducibility-checklist.md
 ```
 
 ## System Requirements
@@ -153,32 +150,3 @@ pytest code/tests/test_integration.py
 flake8 code/
 black --check code/
 ```
-
-## Compliance & Ethics
-
-See `ethics/` folder for:
-- `regulatory_mapping.md` - HMDA, ECOA, GDPR compliance
-- `mitigation_checklist.md` - Implemented safeguards
-- `human_review_policy.md` - Escalation procedures
-- `privacy_spec.md` - PII handling
-
-## Citation
-
-If you use this work, please cite:
-
-```bibtex
-@article{multiagent_credit_2026,
-  title={Multi-Agent AI for Automated Credit Underwriting and Risk Assessment},
-  author={[Generated Implementation]},
-  journal={arXiv preprint},
-  year={2026}
-}
-```
-
-## License
-
-MIT License - See LICENSE file
-
-## Contact & Support
-
-For questions about implementation or reproduction, see `reproducibility-checklist.md` and open an issue.
