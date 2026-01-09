@@ -41,7 +41,6 @@ docker run --rm -v $(pwd)/results:/app/results credit-agents ./run_full.sh
 ├── figures/                # Publication-ready images (generated)
 ├── results/                # Experimental outputs
 ├── ethics/                 # Compliance documentation
-├── CI/                     # GitHub Actions workflows
 ├── Dockerfile              # Reproducible environment
 ├── requirements.txt        # Python dependencies (locked versions)
 ├── run_quick.sh            # Quick test script
