@@ -1,148 +1,120 @@
 # Multi-Agent AI for Credit Underwriting and Risk Assessment
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue)](requirements.txt)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](Dockerfile)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
----
-
-## 🎯 Project Overview
-
-This repository provides a **fully implemented, reproducible multi-agent system** for automated credit underwriting and risk assessment. The system is designed to modernize the loan application process by integrating advanced machine learning models with a robust, auditable agentic workflow. The core innovation lies in the hierarchical multi-agent architecture, which ensures **regulatory compliance**, **fairness guarantees**, and **explainability** for every credit decision.
-
-The central **Supervisor Agent** orchestrates the entire process, delegating specialized tasks to agents responsible for credit scoring, fraud detection, fairness checks, and compliance, ultimately leading to a final, justified decision.
+A fully implemented multi-agent system for automated credit underwriting and risk assessment. A central Supervisor Agent orchestrates a pipeline of specialized agents for credit scoring, fraud detection, fairness checking, and compliance, producing a justified, auditable credit decision with regulatory-grade Adverse Action Notices.
 
 ---
 
-## 🔑 Key Features and Compliance Focus
+## Table of Contents
 
-The system is built with a strong emphasis on regulatory and ethical requirements, making it suitable for deployment in regulated financial environments.
-
-| Feature                             | Category              | Key Capabilities                                                                                                                                                 |
-| :---------------------------------- | :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Hierarchical Multi-Agent System** | Core Architecture     | Central `Supervisor` agent coordinates specialized agents for scoring, fraud, and compliance, including a negotiation loop for borderline cases.                 |
-| **Fairness & Bias Mitigation**      | Ethical AI            | Implements **Reweighing** (pre-processing) and **Threshold Optimization** (post-processing) to ensure **Demographic Parity** and **Equalized Odds**.             |
-| **Explainability & Auditability**   | Regulatory Compliance | Generates human-readable rationales for all decisions, including Adverse Action Notices (`code/compliance/adverse_action.py`), and maintains a full audit trail. |
-| **Model Monitoring**                | MLOps                 | Dedicated module for monitoring model performance, data drift, and concept drift in a production environment.                                                    |
-| **Document Processing**             | Data Ingestion        | Includes a conceptual framework for **OCR processing** of application documents (e.g., pay stubs, bank statements).                                              |
-| **Reproducible Evaluation**         | Experimentation       | Dockerized environment with deterministic synthetic data generation (`code/data/synthetic_generator.py`) for consistent and verifiable results.                  |
+- [Overview](#overview)
+- [Agentic Workflow](#agentic-workflow)
+- [Repository Structure](#repository-structure)
+- [Quick Start](#quick-start)
+- [Evaluation](#evaluation)
+- [License](#license)
 
 ---
 
-## 🤖 Multi-Agent Architecture: The Underwriting Workflow
+## Overview
 
-The system operates as a sequential workflow orchestrated by the `LoanSupervisor` (`code/agents/supervisor.py`), which delegates tasks to specialized agents.
-
-| Step                              | Conceptual Agent     | Implementation Location                     | Function                                                                                                              |
-| :-------------------------------- | :------------------- | :------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------- |
-| **1. Application Intake**         | Document Processor   | `code/document_processing/ocr_processor.py` | Extracts and verifies data from application documents (e.g., income, employment).                                     |
-| **2. Credit Scoring**             | Credit Scorer Agent  | `code/agents/credit_scorer.py`              | Calculates the **Probability of Default (PD)** and a FICO-like score using a trained ML model (e.g., LightGBM).       |
-| **3. Fraud & Risk Assessment**    | Fraud Detector Agent | Logic within `supervisor.py`                | Assesses the application for potential fraud risks and red flags.                                                     |
-| **4. Fairness Check**             | Fairness Agent       | `code/fairness/mitigation.py`               | Monitors the decision for bias across protected attributes and applies mitigation techniques if necessary.            |
-| **5. Decision Aggregation**       | Supervisor Agent     | `code/agents/supervisor.py`                 | Aggregates scores, handles the negotiation loop for borderline cases, and applies human review gating.                |
-| **6. Final Decision & Rationale** | Compliance Agent     | `code/compliance/adverse_action.py`         | Generates the final decision (Approve/Deny/Review) and the legally required Adverse Action Notice (AAN) or rationale. |
+| Feature                             | Description                                                                                                        |
+| :---------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
+| **Hierarchical Multi-Agent System** | Supervisor coordinates scoring, fraud, and compliance agents with a negotiation loop for borderline cases          |
+| **Fairness and Bias Mitigation**    | Reweighing (pre-processing) and Threshold Optimization (post-processing) for Demographic Parity and Equalized Odds |
+| **Explainability and Audit Trail**  | Human-readable rationales and legally compliant Adverse Action Notices for every decision                          |
+| **Model Monitoring**                | Production module for data drift, concept drift, and performance degradation detection                             |
+| **Document Processing**             | OCR framework for extracting data from application documents such as pay stubs and bank statements                 |
+| **Reproducibility**                 | Dockerized environment with deterministic synthetic data generation for consistent experiments                     |
 
 ---
 
-## 📁 Repository Structure and Component Breakdown
+## Agentic Workflow
 
-The repository is structured to clearly separate the agent logic, compliance modules, and evaluation framework.
+The `LoanSupervisor` (`code/agents/supervisor.py`) orchestrates six sequential steps.
 
-### Top-Level Structure
-
-| Path                   | Description                                                                        |
-| :--------------------- | :--------------------------------------------------------------------------------- |
-| `code/`                | Contains all Python source code for the agents, models, and system components.     |
-| `docs/`                | Contains supplementary documentation, including `ENTERPRISE_FEATURES.md`.          |
-| `figures/`             | Stores generated plots and visualizations (e.g., fairness trade-offs, ROC curves). |
-| `results/`             | Output directory for experiment metrics, fairness reports, and synthetic data.     |
-| `scripts/`             | Utility scripts for running the quick demo and generating figures.                 |
-| `Dockerfile`           | Defines the reproducible environment for the system.                               |
-| `README_ENTERPRISE.md` | Documentation for advanced, enterprise-level features.                             |
-
-### Detailed `code/` Directory Breakdown
-
-| Directory                   | Key File(s)                         | Detailed Function                                                                                       |
-| :-------------------------- | :---------------------------------- | :------------------------------------------------------------------------------------------------------ |
-| `code/agents/`              | `supervisor.py`, `credit_scorer.py` | Core multi-agent logic and the central orchestration of the underwriting process.                       |
-| `code/compliance/`          | `adverse_action.py`                 | Module for generating legally compliant Adverse Action Notices (AANs).                                  |
-| `code/data/`                | `synthetic_generator.py`            | Deterministic generation of synthetic credit application data for reproducible experiments.             |
-| `code/document_processing/` | `ocr_processor.py`                  | Conceptual module for Optical Character Recognition (OCR) and document data extraction.                 |
-| `code/eval/`                | `experiment_runner.py`              | Main script for training models, running the agentic system, and executing the full evaluation suite.   |
-| `code/fairness/`            | `mitigation.py`                     | Implementation of fairness metrics and bias mitigation techniques (reweighing, threshold optimization). |
-| `code/monitoring/`          | `model_monitoring.py`               | Framework for detecting data drift, concept drift, and performance degradation in production.           |
-| `code/visualization/`       | `fairness_plots.py`                 | Scripts to generate visualizations of fairness trade-offs and model performance.                        |
+| Step                    | Agent              | Function                                                                          |
+| :---------------------- | :----------------- | :-------------------------------------------------------------------------------- |
+| 1. Application Intake   | Document Processor | Extracts and verifies income, employment, and identity from application documents |
+| 2. Credit Scoring       | Credit Scorer      | Computes Probability of Default and a FICO-like score using LightGBM              |
+| 3. Fraud Assessment     | Fraud Detector     | Assesses application for fraud risk and red flags                                 |
+| 4. Fairness Check       | Fairness Agent     | Monitors for bias across protected attributes and applies mitigation if needed    |
+| 5. Decision Aggregation | Supervisor         | Aggregates scores, runs negotiation loop for borderline cases, gates human review |
+| 6. Final Decision       | Compliance Agent   | Issues Approve/Deny/Review decision and generates the Adverse Action Notice       |
 
 ---
 
-## 🚀 Quick Start
+## Repository Structure
 
-The project uses Docker to ensure a consistent and reproducible environment for all experiments.
+| Path                        | Description                                                  |
+| :-------------------------- | :----------------------------------------------------------- |
+| `code/agents/`              | Supervisor and credit scorer agent logic                     |
+| `code/compliance/`          | Adverse Action Notice generation                             |
+| `code/fairness/`            | Fairness metrics, reweighing, threshold optimization         |
+| `code/data/`                | Deterministic synthetic credit application data generator    |
+| `code/document_processing/` | OCR module for application document extraction               |
+| `code/eval/`                | Model training, agentic system runner, full evaluation suite |
+| `code/monitoring/`          | Data drift and concept drift detection                       |
+| `code/visualization/`       | Fairness trade-off and model performance plots               |
+| `figures/`                  | Generated plots and visualizations                           |
+| `results/`                  | Experiment metrics, fairness reports, synthetic data outputs |
+| `scripts/`                  | Quick demo and figure generation scripts                     |
+
+---
+
+## Quick Start
 
 ### Prerequisites
 
-- Docker (version 20.10+)
+- Docker 20.10+
 - Recommended: 4-core CPU, 8GB RAM
 
-### Run Quick Integration Test (Recommended)
-
-This runs a streamlined version of the experiment, generating synthetic data, training the model, and running a sample evaluation.
-
 ```bash
-# 1. Clone repository
 git clone https://github.com/quantsingularity/Multi-Agent-AI-for-Credit-Underwriting-and-Risk-Assessment.git
 cd Multi-Agent-AI-for-Credit-Underwriting-and-Risk-Assessment
 
-# 2. Build Docker image
 docker build -t credit-agents .
-
-# 3. Run quick test script
 ./scripts/run_quick.sh
-
-# The script executes:
-# docker run --rm -v $(pwd)/results:/app/results credit-agents python code/eval/experiment_runner.py --quick
-
-# 4. View generated results
-ls -la results/
 ```
 
-### Run Full Experiment
+Generates synthetic data, trains the model, and runs a sample evaluation. Results saved to `results/`.
 
-This executes the complete experimental suite, including all fairness mitigation techniques and baselines (estimated 2-4 hours).
+### Full Experiment
 
 ```bash
-# Execute the full experiment runner
 docker run --rm -v $(pwd)/results:/app/results credit-agents python code/eval/experiment_runner.py --full
 ```
 
+Estimated runtime: 2 to 4 hours. Runs all fairness mitigation techniques and baselines.
+
 ---
 
-## 🧪 Evaluation Framework
+## Evaluation
 
-The evaluation framework is designed for rigorous, multi-faceted assessment of the system's performance and fairness.
+### Model Baselines
 
-### Baselines and Models
-
-The agentic system (which uses LightGBM as its backend) is benchmarked against several standard models:
-
-| Model                   | Type              | Purpose                                                             |
-| :---------------------- | :---------------- | :------------------------------------------------------------------ |
-| **Dummy Classifier**    | Baseline          | Measures performance against a random baseline.                     |
-| **Logistic Regression** | Linear            | Simple, interpretable model for comparison.                         |
-| **Decision Tree**       | Non-linear        | Rule-based model for capturing non-linear relationships.            |
-| **LightGBM**            | Gradient Boosting | State-of-the-art model used as the core of the `CreditScorerAgent`. |
+| Model               | Type              | Purpose                              |
+| :------------------ | :---------------- | :----------------------------------- |
+| Dummy Classifier    | Baseline          | Random performance reference         |
+| Logistic Regression | Linear            | Simple interpretable comparison      |
+| Decision Tree       | Non-linear        | Rule-based non-linear comparison     |
+| **LightGBM**        | Gradient Boosting | Core model used by CreditScorerAgent |
 
 ### Fairness Mitigation Techniques
 
-The framework focuses on mitigating bias related to the protected attributes of **sex** and **race**.
+Applied across protected attributes of sex and race.
 
-| Technique                  | Type            | Goal                                                                                              | Implementation                |
-| :------------------------- | :-------------- | :------------------------------------------------------------------------------------------------ | :---------------------------- |
-| **Baseline**               | None            | Measures inherent bias in the unmitigated model.                                                  | `code/fairness/mitigation.py` |
-| **Reweighing**             | Pre-processing  | Adjusts sample weights to achieve statistical parity in the training data.                        | `code/fairness/mitigation.py` |
-| **Threshold Optimization** | Post-processing | Adjusts decision thresholds per group to satisfy fairness constraints (e.g., demographic parity). | `code/fairness/mitigation.py` |
+| Technique              | Type            | Goal                                                           |
+| :--------------------- | :-------------- | :------------------------------------------------------------- |
+| Baseline               | None            | Measures inherent bias in unmitigated model                    |
+| Reweighing             | Pre-processing  | Adjusts sample weights for statistical parity in training data |
+| Threshold Optimization | Post-processing | Adjusts per-group thresholds to satisfy demographic parity     |
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the **MIT License** - see the `LICENSE` file for details.
+Licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
