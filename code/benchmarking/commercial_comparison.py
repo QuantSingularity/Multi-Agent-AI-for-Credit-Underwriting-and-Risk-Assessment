@@ -82,14 +82,16 @@ class CommercialCreditBenchmark:
         """
         n = len(features)
 
-        # Extract relevant features
-        credit_util = features.get("credit_utilization", np.random.beta(2, 5, n))
-        delinquencies = features.get("delinquencies_2y", np.random.poisson(0.3, n))
-        inquiries = features.get("inquiries_6m", np.random.poisson(1.2, n))
-        account_age = features.get(
-            "oldest_account_months", np.random.exponential(80, n)
-        )
-        credit_lines = features.get("credit_lines_open", np.random.poisson(8, n))
+        def _get_col(col: str, fallback: np.ndarray) -> np.ndarray:
+            if col in features.columns:
+                return features[col].values
+            return fallback
+
+        credit_util = _get_col("credit_utilization", np.random.beta(2, 5, n))
+        delinquencies = _get_col("delinquencies_2y", np.random.poisson(0.3, n))
+        inquiries = _get_col("inquiries_6m", np.random.poisson(1.2, n))
+        account_age = _get_col("oldest_account_months", np.random.exponential(80, n))
+        credit_lines = _get_col("credit_lines_open", np.random.poisson(8, n))
 
         # FICO score simulation (simplified)
         base_score = 850

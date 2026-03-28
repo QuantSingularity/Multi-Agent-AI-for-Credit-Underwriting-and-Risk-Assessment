@@ -19,10 +19,10 @@ class LoanSupervisor(BaseAgent):
         self, agent_id: str = "supervisor", config: Optional[Dict[str, Any]] = None
     ):
         super().__init__(agent_id, config)
-        self.decision_threshold_approve = config.get("threshold_approve", 0.7)
-        self.decision_threshold_deny = config.get("threshold_deny", 0.3)
-        self.human_review_threshold = config.get("human_review_threshold", 0.5)
-        self.max_negotiation_rounds = config.get("max_negotiation_rounds", 3)
+        self.decision_threshold_approve = self.config.get("threshold_approve", 0.7)
+        self.decision_threshold_deny = self.config.get("threshold_deny", 0.3)
+        self.human_review_threshold = self.config.get("human_review_threshold", 0.5)
+        self.max_negotiation_rounds = self.config.get("max_negotiation_rounds", 3)
 
     def process(self, application: ApplicationData) -> DecisionResult:
         """
@@ -98,7 +98,11 @@ class LoanSupervisor(BaseAgent):
         aggregate_score = self._aggregate_scores(
             credit_result, fraud_result, income_result
         )
-        self._make_preliminary_decision(aggregate_score)
+
+        preliminary_decision = self._make_preliminary_decision(aggregate_score)
+        self.logger.debug(
+            f"Preliminary decision for {application.application_id}: {preliminary_decision}"
+        )
 
         # Step 7: Negotiation loop for borderline cases
         if self._is_borderline(aggregate_score):
@@ -231,8 +235,11 @@ class LoanSupervisor(BaseAgent):
             return "review"
 
     def _is_borderline(self, score: float) -> bool:
-        """Check if case is borderline and needs negotiation"""
-        return abs(score - self.human_review_threshold) < 0.1
+        """
+        Check if case is borderline and needs negotiation.
+
+        """
+        return self.decision_threshold_deny < score < self.decision_threshold_approve
 
     def _negotiation_loop(
         self, application: ApplicationData, initial_score: float, agent_outputs: Dict

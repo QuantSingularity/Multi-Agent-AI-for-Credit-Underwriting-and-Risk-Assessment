@@ -65,9 +65,8 @@ class ExperimentRunner:
             X, y, test_size=0.2, random_state=self.random_seed, stratify=y
         )
 
-        # Also split sensitive features
-        sens_train = sensitive_features.iloc[X_train.index]
-        sens_test = sensitive_features.iloc[X_test.index]
+        sens_train = sensitive_features.loc[X_train.index]
+        sens_test = sensitive_features.loc[X_test.index]
 
         results = {
             "metadata": {
@@ -236,10 +235,9 @@ class ExperimentRunner:
         self, X_train, y_train, X_test, y_test, sens_test, df_full
     ) -> Dict[str, Any]:
         """Evaluate full multi-agent system"""
-        import sys
 
-        sys.path.insert(0, "code")
         from agents.credit_scorer import CreditScoringAgent
+        from agents.base import ApplicationData
 
         agentic_results = {}
 
@@ -249,12 +247,9 @@ class ExperimentRunner:
         agent.train(X_train.values, y_train, list(X_train.columns))
 
         # Predict on test set
-        # In full system, would go through supervisor, but for metrics we can use agent directly
         y_pred_agent = []
         for idx in X_test.index:
-            # Construct ApplicationData object
             row = df_full.loc[idx]
-            from agents.base import ApplicationData
 
             app = ApplicationData(
                 application_id=row["application_id"],
@@ -500,8 +495,15 @@ class ExperimentRunner:
 
 
 if __name__ == "__main__":
-    # Test evaluation
-    from ..data.synthetic_generator import SyntheticDataGenerator
+
+    import sys
+
+    # Ensure the code/ directory is on the path when running directly
+    _here = Path(__file__).resolve().parent.parent  # code/
+    if str(_here) not in sys.path:
+        sys.path.insert(0, str(_here))
+
+    from data.synthetic_generator import SyntheticDataGenerator
 
     generator = SyntheticDataGenerator(random_seed=42)
     df = generator.generate_applications(n_samples=1000)

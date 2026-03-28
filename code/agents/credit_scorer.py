@@ -21,7 +21,8 @@ class CreditScoringAgent(BaseAgent):
     ):
         super().__init__(agent_id, config)
         self.model = None
-        self.model_type = config.get("model_type", "lightgbm")
+
+        self.model_type = self.config.get("model_type", "lightgbm")
         self.feature_names = []
 
     def train(self, X_train: np.ndarray, y_train: np.ndarray, feature_names: list):

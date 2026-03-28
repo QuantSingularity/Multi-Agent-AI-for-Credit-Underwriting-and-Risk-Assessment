@@ -54,10 +54,12 @@ class FairnessVisualizer:
             aucs.append(result["model_performance"]["auc"])
 
             # Get fairness metrics (use 'sex' as primary protected attribute)
-            metrics = result["metrics"]
-            if "sex" in metrics:
-                dp_diffs.append(metrics["sex"].get("demographic_parity_diff", 0))
-                eo_diffs.append(metrics["sex"].get("equalized_odds_diff", 0))
+            strategy_metrics = result["metrics"]
+            if "sex" in strategy_metrics:
+                dp_diffs.append(
+                    strategy_metrics["sex"].get("demographic_parity_diff", 0)
+                )
+                eo_diffs.append(strategy_metrics["sex"].get("equalized_odds_diff", 0))
             else:
                 dp_diffs.append(0)
                 eo_diffs.append(0)
@@ -147,13 +149,13 @@ class FairnessVisualizer:
 
         # Get all groups
         first_strategy = strategies[0]
-        metrics = fairness_results[first_strategy]["metrics"]
+        first_metrics = fairness_results[first_strategy]["metrics"]
 
-        if protected_attribute not in metrics:
+        if protected_attribute not in first_metrics:
             logger.warning(f"Protected attribute '{protected_attribute}' not found")
             return
 
-        approval_rates = metrics[protected_attribute].get("approval_rates", {})
+        approval_rates = first_metrics[protected_attribute].get("approval_rates", {})
         groups = list(approval_rates.keys())
 
         # Plot 1: Approval rates by group and strategy
@@ -166,8 +168,9 @@ class FairnessVisualizer:
         ):  # Limit to 3 strategies for clarity
             rates = []
             for group in groups:
-                metrics = fairness_results[strategy]["metrics"]
-                group_metrics = metrics.get(protected_attribute, {})
+
+                strategy_group_metrics = fairness_results[strategy]["metrics"]
+                group_metrics = strategy_group_metrics.get(protected_attribute, {})
                 rates.append(
                     group_metrics.get("approval_rates", {}).get(group, 0) * 100
                 )
@@ -196,8 +199,8 @@ class FairnessVisualizer:
         ax = axes[0, 1]
         dp_diffs = []
         for strategy in strategies:
-            metrics = fairness_results[strategy]["metrics"]
-            group_metrics = metrics.get(protected_attribute, {})
+            strategy_metrics = fairness_results[strategy]["metrics"]
+            group_metrics = strategy_metrics.get(protected_attribute, {})
             dp_diffs.append(group_metrics.get("demographic_parity_diff", 0) * 100)
 
         colors = ["red" if x > 5 else "green" for x in dp_diffs]
@@ -214,8 +217,8 @@ class FairnessVisualizer:
         ax = axes[1, 0]
         di_ratios = []
         for strategy in strategies:
-            metrics = fairness_results[strategy]["metrics"]
-            group_metrics = metrics.get(protected_attribute, {})
+            strategy_metrics = fairness_results[strategy]["metrics"]
+            group_metrics = strategy_metrics.get(protected_attribute, {})
             di_ratios.append(group_metrics.get("disparate_impact", 1.0))
 
         colors = ["red" if x < 0.8 else "green" for x in di_ratios]
@@ -242,8 +245,8 @@ class FairnessVisualizer:
         for strategy in strategies:
             row = []
             perf = fairness_results[strategy]["model_performance"]
-            metrics = fairness_results[strategy]["metrics"]
-            group_metrics = metrics.get(protected_attribute, {})
+            strategy_metrics = fairness_results[strategy]["metrics"]
+            group_metrics = strategy_metrics.get(protected_attribute, {})
 
             row.append(perf["auc"])
             row.append(perf.get("precision", 0))
@@ -456,11 +459,11 @@ if __name__ == "__main__":
         },
     }
 
-    visualizer = FairnessVisualizer(output_dir="/home/user/figures")
+    visualizer = FairnessVisualizer(output_dir="figures")
 
     print("\nGenerating visualizations...")
     visualizer.plot_fairness_accuracy_tradeoff(fairness_results)
     visualizer.plot_demographic_bias_audit(fairness_results)
 
     print("\n✓ Visualizations generated successfully")
-    print(f"  Output directory: /home/user/figures")
+    print(f"  Output directory: figures/")

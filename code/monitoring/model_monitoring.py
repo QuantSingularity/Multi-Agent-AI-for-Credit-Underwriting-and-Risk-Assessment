@@ -230,8 +230,7 @@ class ModelMonitor:
         if len(self.true_labels_window) >= len(predictions):
             true_labels = np.array(list(self.true_labels_window)[-len(predictions) :])
 
-        # Compute fairness metrics
-        from code.fairness.mitigation import FairnessAgent
+        from fairness.mitigation import FairnessAgent
 
         sens_df = pd.DataFrame(sensitive_features)
         fairness_agent = FairnessAgent(
@@ -643,6 +642,6 @@ if __name__ == "__main__":
     for alert in dashboard["alerts"]["active"][:5]:
         print(f"\n[{alert['severity']}] {alert['alert_type']}: {alert['message']}")
 
-    # Save report
-    monitor.save_monitoring_report("/home/user/monitoring_report.json")
-    print("\nMonitoring report saved to /home/user/monitoring_report.json")
+    report_path = "monitoring_report.json"
+    monitor.save_monitoring_report(report_path)
+    print(f"\nMonitoring report saved to {report_path}")

@@ -72,8 +72,7 @@ class FairnessAgent:
     ) -> Dict[str, float]:
         """Compute fairness metrics for a sensitive attribute"""
 
-        # Convert probabilities to binary if needed
-        if predictions.dtype == float:
+        if np.issubdtype(predictions.dtype, np.floating):
             pred_binary = (predictions >= 0.5).astype(int)
         else:
             pred_binary = predictions
