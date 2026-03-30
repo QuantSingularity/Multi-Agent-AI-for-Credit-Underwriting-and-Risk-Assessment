@@ -406,7 +406,7 @@ class FairnessVisualizer:
         Create a comprehensive multi-panel fairness report.
         """
         fig = plt.figure(figsize=(18, 12))
-        gs = fig.add_gridspec(3, 3, hspace=0.3, wspace=0.3)
+        fig.add_gridspec(3, 3, hspace=0.3, wspace=0.3)
 
         # This would contain 9 subplots with various fairness visualizations
         # For brevity, implementing key panels
@@ -466,4 +466,4 @@ if __name__ == "__main__":
     visualizer.plot_demographic_bias_audit(fairness_results)
 
     print("\n✓ Visualizations generated successfully")
-    print(f"  Output directory: figures/")
+    print("  Output directory: figures/")

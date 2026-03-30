@@ -69,11 +69,11 @@ def run_comprehensive_demo():
     results = runner.run_full_evaluation(df, quick_mode=False)
 
     print("\n✓ Model Training Complete")
-    print(f"\nBaseline Models:")
+    print("\nBaseline Models:")
     for model_name, metrics in results["baselines"].items():
         print(f"  - {model_name:15s}: AUC = {metrics['auc']:.4f}")
 
-    print(f"\nAgentic System:")
+    print("\nAgentic System:")
     for model_name, metrics in results["agentic_system"].items():
         print(f"  - {model_name:15s}: AUC = {metrics['auc']:.4f}")
 
@@ -208,13 +208,13 @@ def run_comprehensive_demo():
     # Get monitoring dashboard
     dashboard = monitor.get_monitoring_dashboard()
 
-    print(f"\nMonitoring Summary:")
+    print("\nMonitoring Summary:")
     print(f"  - Predictions logged: {dashboard['current_window_size']}")
     print(f"  - Active alerts: {len(dashboard['alerts']['active'])}")
     print(f"  - Alerts by severity: {dashboard['alerts']['by_severity']}")
 
     if dashboard["alerts"]["active"]:
-        print(f"\n  Recent Alerts:")
+        print("\n  Recent Alerts:")
         for alert in dashboard["alerts"]["active"][:3]:
             print(
                 f"    [{alert['severity']}] {alert['alert_type']}: {alert['message']}"
@@ -240,7 +240,7 @@ def run_comprehensive_demo():
         print(f"\n  Notice {i}: {notice['notice_id']}")
         print(f"    Decision: {notice['decision']['action']}")
         print(f"    Applicant: {notice['applicant']['name']}")
-        print(f"    Primary Reasons:")
+        print("    Primary Reasons:")
         for reason in notice["reasons"]:
             print(f"      {reason['rank']}. {reason['description']}")
 

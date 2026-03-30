@@ -363,12 +363,12 @@ if __name__ == "__main__":
 
     print(f"\nDocument Type: {result.document_type}")
     print(f"Confidence: {result.confidence:.2%}")
-    print(f"\nExtracted Fields:")
+    print("\nExtracted Fields:")
     for field, value in result.extracted_fields.items():
         print(f"  {field}: {value}")
 
     if result.validation_errors:
-        print(f"\nValidation Errors:")
+        print("\nValidation Errors:")
         for error in result.validation_errors:
             print(f"  - {error}")
 

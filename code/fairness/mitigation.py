@@ -358,6 +358,6 @@ if __name__ == "__main__":
     y_pred_fair = optimizer.predict(y_pred_proba, pd.Series(sex))
 
     results_fair = agent.process(y_pred_fair, sensitive_df, y_true)
-    print(f"\nAfter threshold optimization:")
+    print("\nAfter threshold optimization:")
     print(f"Passed: {results_fair['passed']}")
     print(f"Metrics: {results_fair['metrics']}")
