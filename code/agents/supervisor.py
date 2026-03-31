@@ -2,9 +2,10 @@
 Loan Supervisor Agent - Orchestrates the underwriting workflow
 """
 
-from typing import Dict, Any, List, Optional
-from .base import BaseAgent, ApplicationData, DecisionResult
 import logging
+from typing import Any, Dict, List, Optional
+
+from .base import ApplicationData, BaseAgent, DecisionResult
 
 logger = logging.getLogger(__name__)
 

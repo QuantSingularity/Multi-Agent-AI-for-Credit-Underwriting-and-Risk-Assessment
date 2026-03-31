@@ -3,10 +3,11 @@ Fairness Agent and Bias Mitigation Strategies
 Implements pre-processing, in-training, and post-processing fairness methods.
 """
 
-from typing import Dict, Any, Optional, Tuple
+import logging
+from typing import Any, Dict, Optional, Tuple
+
 import numpy as np
 import pandas as pd
-import logging
 
 logger = logging.getLogger(__name__)
 

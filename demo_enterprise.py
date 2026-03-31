@@ -7,9 +7,10 @@ import sys
 
 sys.path.insert(0, "code")
 
-import numpy as np
 import logging
 from pathlib import Path
+
+import numpy as np
 
 # Configure logging
 logging.basicConfig(
@@ -17,14 +18,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+from benchmarking.commercial_comparison import CommercialCreditBenchmark
+from compliance.adverse_action import AdverseActionNoticeGenerator
+
 # Import all modules
 from data.synthetic_generator import SyntheticDataGenerator
+from document_processing.ocr_processor import DocumentProcessor
 from eval.experiment_runner import ExperimentRunner
-from compliance.adverse_action import AdverseActionNoticeGenerator
 from monitoring.model_monitoring import ModelMonitor
 from visualization.fairness_plots import FairnessVisualizer
-from benchmarking.commercial_comparison import CommercialCreditBenchmark
-from document_processing.ocr_processor import DocumentProcessor
 
 
 def print_header(title: str):

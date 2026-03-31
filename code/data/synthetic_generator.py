@@ -3,10 +3,11 @@ Synthetic Loan Application Data Generator
 Generates realistic, deterministic synthetic loan applications for experiments.
 """
 
+import logging
+from typing import Any, Dict, List
+
 import numpy as np
 import pandas as pd
-from typing import Dict, Any, List
-import logging
 
 logger = logging.getLogger(__name__)
 

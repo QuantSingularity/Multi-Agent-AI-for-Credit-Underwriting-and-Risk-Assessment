@@ -7,14 +7,15 @@ Implements comprehensive monitoring for production credit models including:
 - Model degradation alerts
 """
 
-import numpy as np
-import pandas as pd
-from typing import Dict, Any, List, Optional
-from datetime import datetime
-from collections import deque
 import json
 import logging
-from dataclasses import dataclass, asdict
+from collections import deque
+from dataclasses import asdict, dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -155,10 +156,10 @@ class ModelMonitor:
             return None
 
         from sklearn.metrics import (
-            roc_auc_score,
+            f1_score,
             precision_score,
             recall_score,
-            f1_score,
+            roc_auc_score,
         )
 
         # Get recent predictions with labels

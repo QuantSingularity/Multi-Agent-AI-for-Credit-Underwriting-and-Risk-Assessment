@@ -4,9 +4,9 @@ OCR and document extraction capabilities for credit underwriting.
 """
 
 import logging
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 

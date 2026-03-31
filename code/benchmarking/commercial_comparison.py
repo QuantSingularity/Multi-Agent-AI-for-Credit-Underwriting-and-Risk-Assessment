@@ -3,11 +3,12 @@ Commercial Credit Scoring Benchmark Module
 Compares ML-based credit underwriting against FICO and VantageScore.
 """
 
+import logging
+from dataclasses import dataclass
+from typing import Any, Dict, List
+
 import numpy as np
 import pandas as pd
-from typing import Dict, Any, List
-from dataclasses import dataclass
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -171,10 +172,10 @@ class CommercialCreditBenchmark:
             Dictionary of benchmark results for each scoring method
         """
         from sklearn.metrics import (
-            roc_auc_score,
+            f1_score,
             precision_score,
             recall_score,
-            f1_score,
+            roc_auc_score,
         )
 
         results = {}

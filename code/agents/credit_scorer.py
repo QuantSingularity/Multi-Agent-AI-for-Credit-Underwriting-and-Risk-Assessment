@@ -2,10 +2,12 @@
 Credit Scoring Agent - Predicts default probability using ML models
 """
 
-from typing import Dict, Any, Optional
-import numpy as np
-from .base import BaseAgent, ApplicationData
 import logging
+from typing import Any, Dict, Optional
+
+import numpy as np
+
+from .base import ApplicationData, BaseAgent
 
 logger = logging.getLogger(__name__)
 

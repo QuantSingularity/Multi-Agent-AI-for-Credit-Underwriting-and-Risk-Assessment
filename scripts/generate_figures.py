@@ -2,15 +2,16 @@
 Generate publication-ready figures from experimental results.
 """
 
-import matplotlib.pyplot as plt
 import matplotlib
+import matplotlib.pyplot as plt
 
 matplotlib.use("Agg")  # Non-interactive backend
-import seaborn as sns
-import json
-from pathlib import Path
 import argparse
+import json
 import logging
+from pathlib import Path
+
+import seaborn as sns
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

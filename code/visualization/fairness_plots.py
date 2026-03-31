@@ -3,13 +3,14 @@ Visualization Module for Fairness and Performance Analysis
 Creates publication-ready visualizations for model performance, fairness metrics, and bias analysis.
 """
 
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from typing import Dict, Any, List
 import logging
 from pathlib import Path
+from typing import Any, Dict, List
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 
 logger = logging.getLogger(__name__)
 

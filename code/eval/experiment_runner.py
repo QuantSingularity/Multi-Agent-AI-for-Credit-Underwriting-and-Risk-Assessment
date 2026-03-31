@@ -3,24 +3,25 @@ Evaluation Framework for Multi-Agent Credit Underwriting System
 Runs experiments, computes metrics, performs statistical tests, and generates results.
 """
 
-import numpy as np
-import pandas as pd
-from typing import Dict, Any, Tuple
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import (
-    roc_auc_score,
-    roc_curve,
-    precision_recall_curve,
-    average_precision_score,
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    confusion_matrix,
-)
 import json
 import logging
 from pathlib import Path
+from typing import Any, Dict, Tuple
+
+import numpy as np
+import pandas as pd
+from sklearn.metrics import (
+    accuracy_score,
+    average_precision_score,
+    confusion_matrix,
+    f1_score,
+    precision_recall_curve,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+    roc_curve,
+)
+from sklearn.model_selection import train_test_split
 
 logger = logging.getLogger(__name__)
 
@@ -180,10 +181,10 @@ class ExperimentRunner:
         self, X_train, y_train, X_test, y_test, sens_test
     ) -> Dict[str, Any]:
         """Evaluate baseline models"""
+        import lightgbm as lgb
+        from sklearn.dummy import DummyClassifier
         from sklearn.linear_model import LogisticRegression
         from sklearn.tree import DecisionTreeClassifier
-        from sklearn.dummy import DummyClassifier
-        import lightgbm as lgb
 
         baselines = {}
 
@@ -236,8 +237,8 @@ class ExperimentRunner:
     ) -> Dict[str, Any]:
         """Evaluate full multi-agent system"""
 
-        from agents.credit_scorer import CreditScoringAgent
         from agents.base import ApplicationData
+        from agents.credit_scorer import CreditScoringAgent
 
         agentic_results = {}
 
@@ -292,12 +293,12 @@ class ExperimentRunner:
         self, X_train, y_train, sens_train, X_test, y_test, sens_test
     ) -> Dict[str, Any]:
         """Evaluate fairness with and without mitigation"""
+        import lightgbm as lgb
         from fairness.mitigation import (
             FairnessAgent,
             ReweighingMitigator,
             ThresholdOptimizer,
         )
-        import lightgbm as lgb
 
         fairness_results = {}
 
